@@ -2,6 +2,7 @@ import sys
 from SATSolver import CnfResolver
 import numpy as np
 import random
+from itertools import product
 import math
 
 
