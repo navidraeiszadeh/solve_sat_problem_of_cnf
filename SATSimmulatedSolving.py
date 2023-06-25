@@ -46,10 +46,16 @@ def possibility(E1, E2):
     result = math.exp(-delta_f / temperature)
     return result
 
-def add_noise_possibility():
-    d
+def add_noise_possibility(cnf_value):
+    global cnf
+    new_cnf_valuation = cnf_value                # add a noise
+    variable = random.randint(0, cnf.nv - 1)     #cnf.nv -> total variable count
+    temp = '0' if new_cnf_valuation[variable] == '1' else '1'
+    new_cnf_valuation = new_cnf_valuation[:variable] + temp + new_cnf_valuation[variable+1:]
 
-def simulated_annealing(random_cnf_example):
+
+
+def simulated_annealing(random_cnf_example): #implement algorithem
     
     for i in range(max):  
         # temperature *= t_coefficient
