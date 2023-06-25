@@ -27,11 +27,10 @@ def count_satisfying_assignments(cnf):
     global size
     num_vars = size  #calculate the number of variable of cnf
     num_satisfying = 0
-    
     for assignment in product([-1, 1], repeat=num_vars):  # it build a cartesian product 
         #  generates all possible combinations of variable assignments for the num_vars variables. Each combination is represented by an assignment
         satisfiable = True  
-        for clause in cnf:
+        for clause in num_vars:
             clause_satisfying = False
             for literal in clause:
                 var = abs(literal)   #the variable var stores the absolute value of the literal, representing the variable part.
@@ -63,12 +62,13 @@ def add_noise_possibility(cnf_value , num):
     return new_cnf_valuation
 
 def simulated_annealing(random_cnf_example): #implement algorithem
+    print (random_cnf_example)
     global cnf
     for i in range(max):  
         temp_random_deep_copy = random_cnf_example.copy()
         cnf_with_noise = add_noise_possibility(temp_random_deep_copy , cnf.nv - 1)    
-        first_energic = count_satisfying_assignments(convert_to_cnf(random_cnf_example))    #fitness for finding energic       
-        second_energic = count_satisfying_assignments(convert_to_cnf(cnf_with_noise))
+        first_energic = count_satisfying_assignments(random_cnf_example)    #fitness for finding energic       
+        second_energic = count_satisfying_assignments(cnf_with_noise)
         if first_energic < second_energic:
             random_cnf_example = cnf_with_noise
             continue
