@@ -1,14 +1,16 @@
 import sys
-from SATSolver import CnfResolver
+# from SATSolver import CnfResolver
 import numpy as np
 import random
 from itertools import product
 import math
+import pysat
+from pysat.formula import CNF
+from pysat.solvers import Solver
 
 
-cnf = CnfResolver('Input.cnf')
+cnf = CNF('Input.cnf')
 max = 100     # must be completed
-max_answer = cnf.clauses_size
 temperature = cnf.clauses_size
 noise_possibility = 0.1
 
@@ -38,6 +40,11 @@ def count_satisfying_assignments(cnf):
     
     return num_satisfying
 
+def possibility(E1, E2):
+    global temperature
+    delta_f = math.fabs(E1 - E2)
+    result = math.exp(-delta_f / temperature)
+    return result
 
 def add_noise_possibility():
     d
@@ -52,13 +59,15 @@ def simulated_annealing(random_cnf_example):
         if first_energic < second_energic:
             random_cnf_example = cnf_with_noise
             continue
-        rand_num = random.random()
-        pos = possibility(first_energic, second_energic)
-        if rand_num <= pos:
+        
+        tmp = possibility(first_energic, second_energic) #find possibility with annealing formula
+        
+        if random.random() <= tmp:
             random_cnf_example = cnf_with_noise
-            print(f'new value {second_energic}, i : {i}, t : {temperature}, p:{pos}')
-        # checking the end conditions:
-        if count_satisfying_assignments(random_cnf_example) == max_answer:
+            print(f'new value {second_energic}, i : {i}, t : {temperature}, p:{tmp}')
+            
+        # check the end conditions:
+        if count_satisfying_assignments(random_cnf_example) == len(cnf.clauses):
             break
 
     
