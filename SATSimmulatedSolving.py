@@ -1,5 +1,5 @@
 import sys
-# from SATSolver import CnfResolver
+# from SATSolver import SATSolver
 import numpy as np
 import random
 from itertools import product
@@ -8,11 +8,19 @@ import pysat
 from pysat.formula import CNF
 from pysat.solvers import Solver
 
-
 cnf = CNF('Input.cnf')
 max = 100     # must be completed
-temperature = cnf.clauses_size
-noise_possibility = 0.1
+temperature = len(cnf.clauses)
+random_cnf = np.random.choice([0, 1], cnf.nv)  # it makes zero and one as a count of variable to make a first example
+
+def convert_to_cnf(cnf_valuation):  #convert binary cnf to a literal list
+    literals = []
+    for i in range(len(cnf_valuation)):
+        if cnf_valuation[i] == 1:
+            literals.append(i + 1)
+        else:
+            literals.append(-(i + 1))
+    return literals
 
 def count_satisfying_assignments(cnf):
     num_vars = len(set(abs(literal) for clause in cnf for literal in clause))  #calculate the number of variable of cnf
@@ -53,12 +61,9 @@ def add_noise_possibility(cnf_value):
     temp = '0' if new_cnf_valuation[variable] == '1' else '1'
     new_cnf_valuation = new_cnf_valuation[:variable] + temp + new_cnf_valuation[variable+1:]
 
-
-
 def simulated_annealing(random_cnf_example): #implement algorithem
     
     for i in range(max):  
-        # temperature *= t_coefficient
         cnf_with_noise = add_noise_possibility(cnf_valuation=random_cnf_example.copy())    
         first_energic = count_satisfying_assignments(random_cnf_example)    #fitness for finding energic       
         second_energic = count_satisfying_assignments(random_cnf_example)
@@ -75,5 +80,7 @@ def simulated_annealing(random_cnf_example): #implement algorithem
         # check the end conditions:
         if count_satisfying_assignments(random_cnf_example) == len(cnf.clauses):
             break
-
+        
+    print(f'valuation : {convert_to_cnf(random_cnf_example)}\nwith fitness value : {count_satisfying_assignments(random_cnf_example)}')   
     
+simulated_annealing(random_cnf)    
