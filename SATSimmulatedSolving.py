@@ -4,12 +4,14 @@ import numpy as np
 import random
 from itertools import product
 import math
+import matplotlib.pyplot as plt
 import pysat
 from pysat.formula import CNF
 from pysat.solvers import Solver
 
 cnf = CNF('Input.cnf')
-max = 100     # must be completed
+max = 100    # must be completed 
+print (max)
 temperature = len(cnf.clauses) * 0.9  # 0.9 is alpha value to reduce tempretaure after per iteration
 size = len(cnf.clauses)
 random_cnf = np.random.choice([0, 1], cnf.nv)  # it makes zero and one as a count of variable to make a first example
@@ -56,11 +58,18 @@ def add_noise_possibility(cnf_value , num):
     new_cnf_valuation[variable] = '0' if new_cnf_valuation[variable] == '1' else '1'
     # new_cnf_valuation = new_cnf_valuation[:variable] + temp + new_cnf_valuation[variable+1:]
     return new_cnf_valuation
-
+delta_I = []
+delta_T = []
 def simulated_annealing(random_cnf_example): #implement algorithem
     print (random_cnf_example)
     global cnf
-    for i in range(max):  
+    global temperature
+    
+    for i in range(max):
+        #for test -> alpha reduction iterator of temprature
+        temperature *= 0.9
+        delta_I.append(i)
+        delta_T.append(temperature)  
         temp_random_deep_copy = random_cnf_example.copy()
         cnf_with_noise = add_noise_possibility(temp_random_deep_copy , cnf.nv - 1)    
         first_energic = count_satisfying_assignments(random_cnf_example)    #fitness for finding energic       
@@ -80,4 +89,8 @@ def simulated_annealing(random_cnf_example): #implement algorithem
     
     print(f' *** {convert_to_cnf(random_cnf_example)}  and value of energic is: {count_satisfying_assignments(random_cnf_example)}');    #for test  
     
-simulated_annealing(random_cnf)    
+simulated_annealing(random_cnf)  
+x = delta_I
+y = delta_T
+plt.plot(x, y)
+plt.show()
