@@ -44,7 +44,7 @@ def count_satisfying_assignments(cnf_test):
                     count_of_sat += 1
     return count_of_sat
 
-def possibility(E1, E2):
+def EnergicCheck(E1, E2):
     global temperature
     delta_f = math.fabs(E1 - E2)
     result = math.exp(-delta_f / temperature)
@@ -69,7 +69,7 @@ def simulated_annealing(random_cnf_example): #implement algorithem
             random_cnf_example = cnf_with_noise
             continue
         
-        tmp = possibility(first_energic, second_energic) #find possibility with annealing formula
+        tmp = EnergicCheck(first_energic, second_energic) #find possibility with annealing formula
         
         if random.random() <= tmp:
             random_cnf_example = cnf_with_noise
