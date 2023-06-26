@@ -68,7 +68,6 @@ def genetic_algorithm(cnf, population_size, max_iterations, mutation_rate):
     for _ in range(max_iterations):     
         # Select parents 
         parents = choose_parent(first_cnf_example)
-        
         # Perform crossover and mutation for create the next generation
         list = []
         for i in range(0, population_size, 2):
@@ -84,8 +83,8 @@ def genetic_algorithm(cnf, population_size, max_iterations, mutation_rate):
     # Find the best solution from the final population
     best_solution = max(new_generation , key=lambda cnf_valuation: fitness(cnf_valuation, cnf))
     best_fitness = fitness(best_solution, cnf)
-    
+    print(f'BEST FITNESS = { best_fitness }')
+    print(best_solution)
     return best_solution, best_fitness
 
-
-
+genetic_algorithm(first_cnf_example , cnf.nv , len(cnf.clauses) , 0.8)
