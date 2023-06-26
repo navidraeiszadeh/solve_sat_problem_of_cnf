@@ -10,7 +10,7 @@ from pysat.solvers import Solver
 
 cnf = CNF('Input.cnf')
 max = 100     # must be completed
-temperature = len(cnf.clauses)
+temperature = len(cnf.clauses) * 0.9  # 0.9 is alpha value to reduce tempretaure after per iteration
 size = len(cnf.clauses)
 random_cnf = np.random.choice([0, 1], cnf.nv)  # it makes zero and one as a count of variable to make a first example
 
@@ -77,6 +77,7 @@ def simulated_annealing(random_cnf_example): #implement algorithem
         # check the end conditions:
         if count_satisfying_assignments(random_cnf_example) == len(cnf.clauses):
             break
-          
+    
+    print(f' *** {convert_to_cnf(random_cnf_example)}  and value of energic is: {count_satisfying_assignments(random_cnf_example)}');    #for test  
     
 simulated_annealing(random_cnf)    
