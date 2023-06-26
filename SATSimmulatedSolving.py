@@ -51,8 +51,8 @@ def EnergicCheck(E1, E2):
     return result
 
 def add_noise_possibility(cnf_value , num):
-    new_cnf_valuation = cnf_value                # add a noise
-    variable = random.randint(0, num)     #cnf.nv -> total variable count
+    new_cnf_valuation = cnf_value                # add a noise  -> baz namaeei binary
+    variable = random.randint(0, num)     #cnf.nv -> total variable number
     new_cnf_valuation[variable] = '0' if new_cnf_valuation[variable] == '1' else '1'
     # new_cnf_valuation = new_cnf_valuation[:variable] + temp + new_cnf_valuation[variable+1:]
     return new_cnf_valuation
