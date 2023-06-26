@@ -43,8 +43,7 @@ def add_mution(cnf_value , num):
     variable = random.randint(0, num)     #cnf.nv -> total variable count
     new_cnf_valuation[variable] = '0' if new_cnf_valuation[variable] == '1' else '1'
     return new_cnf_valuation
-            
-            
+                               
 def choose_parent(generation_list):
     global number_of_generation
     best_member = int(number_of_selected_parent * 0.8)
@@ -59,7 +58,34 @@ def cross_over(P1 , P2):
     father_gene = [P1.gene[i] for i in range(random_index)]  # set it in a dictionory
     mother_gene = [P2.gene[i] for i in range(random_index, cnf.nv)]
     father_gene.extend(mother_gene)
-    return add_mution(father_gene)
+    return add_mution(father_gene)   #cast it to creature??
 
 first_cnf_example = [creature(np.random.choice([0, 1], size=cnf.nv)) for i in range(cnf.nv)] #make a first cnf
 parent = []
+new_generation = []
+
+def genetic_algorithm(cnf, population_size, max_iterations, mutation_rate):
+    for _ in range(max_iterations):     
+        # Select parents 
+        parents = choose_parent(first_cnf_example)
+        
+        # Perform crossover and mutation for create the next generation
+        list = []
+        for i in range(0, population_size, 2):
+            parent1 = parents[i]
+            parent2 = parents[i+1]
+            child1 = cross_over(parent1, parent2)
+            child2 = cross_over(parent2, parent1)
+            mutated_child1 = add_mution(child1, mutation_rate)
+            mutated_child2 = add_mution(child2, mutation_rate)
+            list.extend([mutated_child1, mutated_child2])
+        
+        new_generation = list
+    # Find the best solution from the final population
+    best_solution = max(new_generation , key=lambda cnf_valuation: fitness(cnf_valuation, cnf))
+    best_fitness = fitness(best_solution, cnf)
+    
+    return best_solution, best_fitness
+
+
+
