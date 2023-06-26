@@ -87,4 +87,9 @@ def genetic_algorithm(cnf, population_size, max_iterations, mutation_rate):
     print(best_solution)
     return best_solution, best_fitness
 
-genetic_algorithm(first_cnf_example , cnf.nv , len(cnf.clauses) , 0.8)
+
+for k in range(number_of_generation):
+    print(f'cycle { k } with max value {first_cnf_example[-1].fitness}')
+    first_cnf_example = genetic_algorithm(first_cnf_example , cnf.nv , len(cnf.clauses) , 0.8)
+    if first_cnf_example[-1].fitness == len(cnf.clauses):
+        break

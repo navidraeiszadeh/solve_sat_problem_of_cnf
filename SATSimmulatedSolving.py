@@ -9,8 +9,9 @@ import pysat
 from pysat.formula import CNF
 from pysat.solvers import Solver
 
+
 cnf = CNF('Input.cnf')
-max = 100    # must be completed 
+max = 100   # must be completed 
 print (max)
 temperature = len(cnf.clauses) * 0.9  # 0.9 is alpha value to reduce tempretaure after per iteration
 size = len(cnf.clauses)
