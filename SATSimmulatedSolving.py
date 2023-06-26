@@ -23,30 +23,26 @@ def convert_to_cnf(cnf_valuation):  #convert binary cnf to a literal list
             literals.append(-(i + 1))
     return literals
 
-def count_satisfying_assignments(cnf):
-    global size
-    num_vars = size  #calculate the number of variable of cnf
-    num_satisfying = 0
-    for assignment in product([-1, 1], repeat=num_vars):  # it build a cartesian product 
-        #  generates all possible combinations of variable assignments for the num_vars variables. Each combination is represented by an assignment
-        satisfiable = True  
-        for clause in num_vars:
-            clause_satisfying = False
-            for literal in clause:
-                var = abs(literal)   #the variable var stores the absolute value of the literal, representing the variable part.
-                value = assignment[var-1]     #store the value of that -> is 1 or -1
-                if (literal > 0 and value == 1) or (literal < 0 and value == -1):
-                    clause_satisfying = True     #literal is satisfied
-                    break
-            
-            if not clause_satisfying:
-                satisfiable = False
-                break
-        
-        if satisfiable:
-            num_satisfying += 1
-    
-    return num_satisfying
+def count_satisfying_assignments(cnf_test):
+    global cnf
+    contributions = {}
+    tmp = 0
+    for clause in cnf.clauses:
+        for literal in clause:
+            if contributions.get(literal) is None:
+                contributions[literal] = set()    
+            contributions[literal].add(tmp)    
+        tmp += 1
+    count_of_sat = 0
+    satisfied_parts = np.zeros(len(cnf.clauses))
+    for i in range(cnf.nv):
+        if cnf_test[i] == 1:
+            contribution_set = contributions[i+1]
+            for i in contribution_set:
+                if satisfied_parts[i] == 0:
+                    satisfied_parts[i] = 1
+                    count_of_sat += 1
+    return count_of_sat
 
 def possibility(E1, E2):
     global temperature
@@ -77,12 +73,10 @@ def simulated_annealing(random_cnf_example): #implement algorithem
         
         if random.random() <= tmp:
             random_cnf_example = cnf_with_noise
-            print(f'new value {second_energic}, i : {i}, t : {temperature}, p:{tmp}')
             
         # check the end conditions:
         if count_satisfying_assignments(random_cnf_example) == len(cnf.clauses):
             break
-        
-    print(f'valuation : {convert_to_cnf(random_cnf_example)}\nwith fitness value : {count_satisfying_assignments(random_cnf_example)}')   
+          
     
 simulated_annealing(random_cnf)    

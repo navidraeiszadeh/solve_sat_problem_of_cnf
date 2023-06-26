@@ -8,19 +8,18 @@ from pysat.formula import CNF
 
 cnf = CNF('Input.cnf')
 # number of current generation
-mu = 2 * cn.nv
+mu = 2 * cnf.nv
 # number of selected parent
 lmda = int(math.sqrt(mu)) #-> 80
 mutation_percent = 0.95
 top_membership_percent = 0.85
-max_iteration = 10 * cn.clauses_size
-max_answer = cn.clauses_size
+max_iteration = 10 * cnf.clauses_size
+max_answer = cnf.clauses_size
 
 class creature:
     def __init__(self, gene: list):
         self.gene = gene
         self.fitness = fitness(gene)     #calculate the fitness of that!
-
 
 def fitness(cnf_test):
     global cnf
