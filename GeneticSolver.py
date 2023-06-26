@@ -6,7 +6,7 @@ import math
 from pysat.formula import CNF
 
 
-cn = CnfResolver("input.cnf")
+cnf = CNF('Input.cnf')
 # number of current generation
 mu = 2 * cn.nv
 # number of selected parent
@@ -16,15 +16,32 @@ top_membership_percent = 0.85
 max_iteration = 10 * cn.clauses_size
 max_answer = cn.clauses_size
 
-
-# def fitness(cnf_valuation):
-#     global cn
-
-#     return cn.count_number_of_satisfactions(cnf_valuation)
-
-
 class creature:
     def __init__(self, gene: list):
         self.gene = gene
         self.fitness = fitness(gene)     #calculate the fitness of that!
+
+
+def fitness(cnf_test):
+    global cnf
+    contributions = {}
+    tmp = 0
+    for clause in cnf.clauses:
+        for literal in clause:
+            if contributions.get(literal) is None:
+                contributions[literal] = set()    
+            contributions[literal].add(tmp)    
+        tmp += 1
+    count_of_sat = 0
+    satisfied_parts = np.zeros(len(cnf.clauses))
+    for i in range(cnf.nv):
+        if cnf_test[i] == 1:
+            contribution_set = contributions[i+1]
+            for i in contribution_set:
+                if satisfied_parts[i] == 0:
+                    satisfied_parts[i] = 1
+                    count_of_sat += 1
+    return count_of_sat                    
+            
+
 
